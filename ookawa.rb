@@ -20,8 +20,7 @@ def stream(account, toots)
 
       ws.on :close do |e|
         puts "connection close."
-        puts e
-        $tl_close = true        
+        puts e      
       end
 
       ws.on :message do |msg|
@@ -30,8 +29,6 @@ def stream(account, toots)
           toot_body = JSON.parse(toot["payload"])
           if toot_body["type"] == "mention"
             body = "@#{toot_body["account"]["acct"]} スゥ…#{toot_body["account"]["display_name"]}の守護霊です…"
-
-            puts toot_body["status"]["id"]
             post_toot(body, toot_body["status"]["id"], account)
           end
           # なんかする
