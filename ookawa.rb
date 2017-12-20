@@ -11,7 +11,6 @@ def stream(account, toots)
     )
       ws.on :open do |e|
         puts "open"
-        $tl_close = false
       end
 
       ws.on :error do |e|
