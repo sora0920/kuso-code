@@ -2,7 +2,8 @@ require 'net/http'
 require 'uri'
 require 'json'
 
-# MastodonのTootのURL(e.g. https://mstdn.maud.io/@BrownSugar/100005707571838975 )を引数にいれると投稿のJSONを取得してJSONファイルとして出力するスクリプトです。
+# MastodonのTootのURL(e.g. https://mstdn.maud.io/@BrownSugar/100005707571838975 )
+# を引数にいれると投稿のJSONを取得してJSONファイルとして出力するスクリプトです。
 # 公開投稿のみに対応しています。
 
 toot = ARGV[0].to_s
