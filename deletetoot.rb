@@ -1,6 +1,7 @@
 require "net/http"
 require "uri"
 require "json"
+require "optparse"
 
 # Mastodonの投稿全消しスクリプトです。
 # C-cでキャンセルできます。
@@ -25,12 +26,18 @@ end
 def get_current_account_statuses(host, token)
   id = get_current_account_id(host, token)
 
-  uri = URI.parse("https://#{host}/api/v1/accounts/#{id}/statuses")
+  if $onlymedia
+    puts "Delete Media Toots"
+    uri = URI.parse("https://#{host}/api/v1/accounts/#{id}/statuses?only_media=true")
+  else
+    puts "Delete All Toots"
+    uri = URI.parse("https://#{host}/api/v1/accounts/#{id}/statuses")
+  end
 
   https = Net::HTTP.new(uri.host, uri.port)
   https.use_ssl = true
 
-  req = Net::HTTP::Get.new(uri.path)
+  req = Net::HTTP::Get.new(uri.request_uri)
   req["Authorization"] = "Bearer #{token}"
 
   res = https.request(req)
@@ -77,6 +84,14 @@ def delete_current_account_statuses(host, token)
       sleep 3
     }
   end
+end
+
+$onlymedia = false
+
+OptionParser.new do |opt|
+  opt.on('--onlymedia',       'Delete to Media Toots'     ) { $onlymedia = true }
+  
+  opt.parse!(ARGV)
 end
 
 delete_current_account_statuses(ARGV[0], ARGV[1])
